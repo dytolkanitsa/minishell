@@ -6,7 +6,7 @@
 /*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/26 16:54:03 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/13 17:52:17 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/13 18:06:11 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,10 @@ size_t	ft_strlen(const char *str);
 char	*ft_strdup(const char *str);
 char	*ft_strchr(const char *str, int c);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
+int		if_key_ok(char *str);
+int		ft_isalnum(int c);
+void	*ft_calloc(size_t number, size_t size);
+void	ft_bzero(void *s, size_t n);
 
 //parse
 void	parse_redir_pipe(t_all *all, char *line);
@@ -112,6 +116,13 @@ void	print_struct(t_all *all);//временная для вывода
 t_parse	*new_node(void);
 void	work_with_cmd(t_parse *parse);
 void	work_with_files(t_parse *parse);
+
+// quotes
+void	quot(t_all *all, t_env *envi);
+void	quotes(t_all *all, t_env *envi);
+void	do_two_quotes(t_all **all, t_env *envi);
+void	do_simple_quotes(t_all **all, t_env *envi);
+void	do_dollar(t_all **all, t_env *envi);
 
 //init
 void	init_env(t_env	**envi, char **env);
