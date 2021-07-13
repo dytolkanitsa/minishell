@@ -6,7 +6,7 @@
 /*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/26 16:44:47 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/12 18:25:33 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/13 18:00:00 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,53 @@ void	*ft_calloc(size_t number, size_t size)
 	return (str);
 }
 
-void	do_two_quotes(t_all **all);
-
-void	do_simple_quotes(t_all **all)
+int	ft_isalnum(int c)
 {
-	// printf("!!!!!!!");
+	if ((c >= 65 && c <= 90)
+		|| (c >= 97 && c <= 122)
+		|| (c >= 48 && c <= 57))
+		return (1);
+	else
+		return (0);
+}
+
+int	if_key_ok(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] != '_' || !ft_isalnum(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+void	do_dollar(t_all **all, t_env *envi)
+{
+	int	key_len;
+
+	(*all)->parse->i_2++;
+	(*all)->parse->i_1++;
+	key_len = ft_strlen((*all)->parse->line1 + (*all)->parse->i_1);
+	while (envi)
+	{
+		if (ft_strncmp(((*all)->parse->line1 + (*all)->parse->i_1), envi->value, key_len) == 0)
+		{
+			(*all)->parse->line2 = ft_strdup(envi->value + key_len + 1);
+		}
+		(*all)->parse->i_2 += ft_strlen(envi->value + key_len + 1);
+		envi = envi->next;
+	}
+	(*all)->parse->i_2++;
+}
+
+void	do_two_quotes(t_all **all, t_env *envi);
+
+void	do_simple_quotes(t_all **all, t_env *envi)
+{
 	(*all)->parse->line2[(*all)->parse->i_2] = '\'';
 	(*all)->parse->i_2++;
 	(*all)->parse->i_1++;
@@ -60,7 +102,8 @@ void	do_simple_quotes(t_all **all)
 	{
 		if ((*all)->parse->line1[(*all)->parse->i_1] == '\"')
 		{
-			do_two_quotes(all);
+			(*all)->parse->flag = 1;
+			do_two_quotes(all, envi);
 			continue ;
 		}
 		(*all)->parse->line2[(*all)->parse->i_2++] = (*all)->parse->line1[(*all)->parse->i_1++];
@@ -69,7 +112,7 @@ void	do_simple_quotes(t_all **all)
 	(*all)->parse->i_2++;
 }
 
-void	do_two_quotes(t_all **all)
+void	do_two_quotes(t_all **all, t_env *envi)
 {
 	(*all)->parse->line2[(*all)->parse->i_2] = '\"';
 	(*all)->parse->i_2++;
@@ -78,7 +121,12 @@ void	do_two_quotes(t_all **all)
 	{
 		if ((*all)->parse->line1[(*all)->parse->i_1] == '\'')
 		{
-			do_simple_quotes(all);
+			do_simple_quotes(all, envi);
+			continue ;
+		}
+		if ((*all)->parse->line1[(*all)->parse->i_1] == '$' && (*all)->parse->flag != 1)
+		{
+			do_dollar(all, envi);
 			continue ;
 		}
 		(*all)->parse->line2[(*all)->parse->i_2++] = (*all)->parse->line1[(*all)->parse->i_1++];
@@ -87,30 +135,34 @@ void	do_two_quotes(t_all **all)
 	(*all)->parse->i_2++;
 }
 
-void	quotes(t_all *all)
+
+
+void	quotes(t_all *all, t_env *envi)
 {
 	int	i;
 
 	i = 0;
-	// all->parse->split2 = malloc(sizeof(char *) * (ft_splitlen(all->parse->split) + 1));
 	while (all->parse->split[i])
 	{
+		all->parse->flag = 0;
 		all->parse->i_1 = 0;
 		all->parse->i_2 = 0;
 		all->parse->line1 = all->parse->split[i];
 		all->parse->line2 = (char *)ft_calloc(1000, sizeof(char));
 		while (all->parse->line1[all->parse->i_1])
 		{
-			if (all->parse->line1[all->parse->i_1] == '\'' || all->parse->line1[all->parse->i_1] == '\"')
+			if (all->parse->line1[all->parse->i_1] == '\'' || all->parse->line1[all->parse->i_1] == '\"' \
+									|| all->parse->line1[all->parse->i_1] == '$')
 			{
 				if (all->parse->line1[all->parse->i_1] == '\'')
-					do_simple_quotes(&all);
-				else if (all->parse->line1[all->parse->i_1] == '\"')
-					do_two_quotes(&all);
+					do_simple_quotes(&all, envi);
+				if (all->parse->line1[all->parse->i_1] == '\"')
+					do_two_quotes(&all, envi);
+				if (all->parse->line1[all->parse->i_1] == '$')
+					do_dollar(&all, envi);
 			}
 			else
 				all->parse->line2[all->parse->i_2++] = all->parse->line1[all->parse->i_1++];
-				printf("%s\n", all->parse->line2);
 		}
 		all->parse->line2[all->parse->i_2] = '\0';
 		all->parse->split2[i] = all->parse->line2;
@@ -119,7 +171,6 @@ void	quotes(t_all *all)
 	}
 	all->parse->split2[i] = NULL;
 	free(all->parse->split2);
-	// free(all->parse->line1);
 	// int n = 0;
 	// while (all->parse->split2[n])
 	// {
@@ -128,12 +179,12 @@ void	quotes(t_all *all)
 	// }
 }
 
-void	quot(t_all *all)
+void	quot(t_all *all, t_env *envi)
 {
-	all->parse->split2 = malloc(sizeof(char *) * (ft_splitlen(all->parse->split) + 1));
 	while (all->parse)
 	{
-		quotes(all);
+		all->parse->split2 = malloc(sizeof(char *) * (ft_splitlen(all->parse->split) + 1));
+		quotes(all, envi);
 		all->parse = all->parse->next;
 	}
 }
@@ -143,6 +194,7 @@ int	main(int argc, char **argv, char **env)
 	t_all	*all;
 	pid_t	pid;
 	t_parse	*par;
+	t_parse *head;
 	char	*line;
 	char	**split;
 	t_env	*envi;
@@ -153,6 +205,7 @@ int	main(int argc, char **argv, char **env)
 	all = malloc(sizeof(t_all));
 	par = new_node();
 	all->parse = par;
+	head = all->parse;
 	init_env(&envi, env);
 	signal_init();
 	while (42)
@@ -175,8 +228,10 @@ int	main(int argc, char **argv, char **env)
 		add_history(line);
 		rl_redisplay();
 		parse_redir_pipe(all, line);
-		quot(all);
-		work_with_fd(line, all);
+		quot(all, envi);
+		// all->parse = head;
+		// printf("!!!!!!!\n");
+		// work_with_fd(line, all);
 		// print_struct(all);
 		while (all->parse)
 		{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   work_with_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/11 11:21:49 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/12 16:22:39 by mjammie          ###   ########.fr       */
+/*   Updated: 2021/07/13 17:02:58 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ char	*get_file_name(t_all *all)
 			all->f++;
 		}
 	}
+	// all->parse = head;
 	return (fname);
 }
 
@@ -90,6 +91,7 @@ void	work_with_fd(char *line, t_all *all)
 		}
 		i++;
 	}
+	all->parse = head;
 }
 
 void	dup_fd(t_all *all)

@@ -6,7 +6,7 @@
 /*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/26 16:54:03 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/12 18:22:46 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/13 17:52:17 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_parse
 	char			*line1;
 	char			*line2;
 	char			**split2;
+	int				flag;
 
 	int				count_r;
 	int				redir1; //>
