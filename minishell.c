@@ -6,7 +6,7 @@
 /*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/26 16:44:47 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/13 18:12:53 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/14 13:12:25 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ int	main(int argc, char **argv, char **env)
 	t_all	*all;
 	pid_t	pid;
 	t_parse	*par;
-	t_parse *head;
 	char	*line;
 	char	**split;
 	t_env	*envi;
 	int		len_split;
+	t_parse *head;
 
 	(void)argc;
 	(void)argv;
@@ -29,8 +29,8 @@ int	main(int argc, char **argv, char **env)
 	par = new_node();
 	all->parse = par;
 	head = all->parse;
-	init_env(&envi, env);
 	signal_init();
+	init_env(&envi, env);
 	while (42)
 	{
 		all->count_fd = 0;
@@ -42,52 +42,29 @@ int	main(int argc, char **argv, char **env)
 		line = readline("minishell> ");
 		if (line == NULL)
 			ctrl_d_hook();
-		if (line && line[0] == '\0') // чтобы можно было вечно нажимать ентер
+		if (line && line[0] == '\0')
 		{
-			free(line);
-			continue ;
-		}
+      		free(line);
+      		continue ;
+    	}
 		split = NULL;
 		add_history(line);
 		rl_redisplay();
 		parse_redir_pipe(all, line);
 		quot(all, envi);
-		// all->parse = head;
-		// printf("!!!!!!!\n");
-		// work_with_fd(line, all);
+		all->parse = head;
+		// printf("%s\n", )
+		work_with_fd(line, all);
 		// print_struct(all);
 		while (all->parse)
 		{
 			if (all->count_pipe != 0)
 			{
-				// split = ft_split(line, '|');
-				
 				len_split = ft_splitlen(all->parse->split);
-				pipex(len_split, all->parse->split, env, all);
+				pipex(len_split, all->parse->split, /*env,*/ all, envi);
 				break ;
 			}
-			// PIPEX
-			
-			// split = ft_split(line, '|');
-			// len_split = ft_splitlen(split);
-			// if (par->pipe != 0)
-			// {
-			// 	// pipex(par->pipe, split, env);
-			// 	pipex(len_split, split, env);
-			// 	break ;
-			// }
-			// PIPEX
-			
-			// while (split[i])
-			// {
-			// 	printf("%s\n", split[i]);
-			// 	i++;
-			// }
 			else
-			// {
-			// 	split = ft_split(line, ' ');
-			// 	len_split = ft_splitlen(split);
-			// while (all->parse)
 			{
 				if (ft_strcmp(all->parse->split[0], "pwd") == 0)
 					cmd_pwd(envi, all);
@@ -103,16 +80,25 @@ int	main(int argc, char **argv, char **env)
 					cmd_unset(envi, all->parse->split[1]);
 				else if (ft_strcmp(all->parse->split[0], "exit") == 0)
 					cmd_exit(envi);
+				else if (ft_strcmp(all->parse->split[0], "<<") == 0)
+				{
+					while (42)
+					{
+						line = readline("> ");
+						if (line == NULL)
+							break ;
+						if (ft_strcmp(line, all->parse->split[1]) == 0)
+							break ;
+						rl_on_new_line();
+					}
+				}
 				else
 				{
-					other_cmd(all->parse->split, envi, env, all);
-					wait(0);
+					other_cmd(all->parse->split, envi, all);
 				}
 			}
 			all->parse = all->parse->next;
 		}
 		all->parse = par;
-		// free(all->parse); // доработать фри
-		// all->parse = NULL;
 	}
 }

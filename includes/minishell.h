@@ -6,7 +6,7 @@
 /*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/26 16:54:03 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/13 18:06:11 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/14 13:05:06 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ typedef struct s_parse
 	char			*line1;
 	char			*line2;
 	char			**split2;
-	int				flag;
+	int				flag; // чтобы работало "'$USER'"
+	int				flag2; // чтобы работало '"$USER"' (работает идеально)
 
 	int				count_r;
 	int				redir1; //>
@@ -89,7 +90,7 @@ void	cmd_env(t_env *envi, t_all *all);
 void	cmd_export(t_env *envi, char **argv, int argc, t_all *all);
 void	cmd_cd(t_env *envi, char *str);
 void	cmd_unset(t_env *envi, char *key);
-void	other_cmd(char **cmd, t_env *envi, char **env, t_all *all);
+void	other_cmd(char **cmd, t_env *envi, t_all *all);
 void	cmd_exit(t_env *envi);
 
 // utils
@@ -105,6 +106,8 @@ size_t	ft_strlen(const char *str);
 char	*ft_strdup(const char *str);
 char	*ft_strchr(const char *str, int c);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	**get_path(t_env *envi);
+char	*join_path_to_file(char *path, char *cmd);
 int		if_key_ok(char *str);
 int		ft_isalnum(int c);
 void	*ft_calloc(size_t number, size_t size);
@@ -131,7 +134,7 @@ void	dup_fd(t_all *all);
 void	close_fd(t_all *all);
 
 //pipe
-int		pipex(int count_pipes, char **split, char **env, t_all *all);
+int		pipex(int count_pipes, char **split, /*char **env,*/ t_all *all, t_env *envi);
 // int		pipex(int count_pipes, char **split, char **env, t_env *envi);
 
 //signal

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   work_with_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/11 11:21:49 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/13 17:02:58 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/14 11:34:03 by mjammie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ char	*get_file_name(t_all *all)
 			all->f++;
 		}
 	}
-	// all->parse = head;
 	return (fname);
 }
 
@@ -60,8 +59,9 @@ void	work_with_fd(char *line, t_all *all)
 		if (line[i] == '|')
 		{
 			pipe(mfd);
+			all->pfd[n + 1][0] = mfd[0]; //all->pfd[n + 1][0] = mfd[0];
 			all->pfd[n][1] = mfd[1];
-			all->pfd[n][0] = mfd[0]; //all->pfd[n + 1][0] = mfd[0];
+			printf("%d %d\n", all->pfd[n][0], all->pfd[n][1]);
 			n++;
 		}
 		if (line[i] == '>')
@@ -91,15 +91,13 @@ void	work_with_fd(char *line, t_all *all)
 		}
 		i++;
 	}
-	all->parse = head;
 }
 
 void	dup_fd(t_all *all)
 {
-	printf("fd1={%d}\n", all->pfd[all->fd_iter][1]);
-	printf("fd0={%d}\n", all->pfd[all->fd_iter][0]);
 	all->tm_fd1 = dup(1);
 	all->tm_fd0 = dup(0);
+	// printf("<%d %d>\n", all->pfd[all->fd_iter][0], all->pfd[all->fd_iter][1]);
 	dup2(all->pfd[all->fd_iter][1], 1);
 	dup2(all->pfd[all->fd_iter][0], 0);
 }
@@ -107,9 +105,13 @@ void	dup_fd(t_all *all)
 void	close_fd(t_all *all)
 {
 	if (all->pfd[all->fd_iter][0] != 0)
+	{
 		close(all->pfd[all->fd_iter][0]);
+	}
 	if (all->pfd[all->fd_iter][1] != 1)
+	{
 		close(all->pfd[all->fd_iter][1]);
+	}
 	dup2(all->tm_fd1, 1);
 	dup2(all->tm_fd0, 0);
 }

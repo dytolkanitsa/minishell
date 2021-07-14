@@ -1,36 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal_init.c                                      :+:      :+:    :+:   */
+/*   join_path_to_file.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/06 20:31:36 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/12 20:42:16 by mjammie          ###   ########.fr       */
+/*   Created: 2021/07/13 14:06:41 by mjammie           #+#    #+#             */
+/*   Updated: 2021/07/14 12:45:41 by mjammie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	my_sigint(int val)
+char	*join_path_to_file(char *path, char *cmd)
 {
-	rl_on_new_line();
-	rl_redisplay();
-	ft_putstr_fd("  \n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
+	char	*result;
+	char	*for_free;
 
-void	ctrl_d_hook(void)
-{
-	ft_putstr_fd("\e[1A\e[12C" "exit\n", 1);
-	exit (1);
-}
-
-void	signal_init(void)
-{
-	signal(SIGINT, my_sigint);
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGTSTP, SIG_IGN);
+	for_free = cmd;
+	if (ft_strchr(cmd, '/'))
+		return (cmd);
+	cmd = ft_strjoin("/", cmd);
+	result = ft_strjoin(path, cmd);
+	free(cmd);
+	return (result);
 }

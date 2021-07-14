@@ -6,7 +6,7 @@
 /*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/10 12:13:52 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/13 18:40:52 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/14 13:14:26 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,11 @@ void	do_simple_quotes(t_all **all, t_env *envi)
 			do_two_quotes(all, envi);
 			continue ;
 		}
+		if ((*all)->parse->line1[(*all)->parse->i_1] == '$' && (*all)->parse->flag2 == 1)
+		{
+			do_dollar(all, envi);
+			continue ;
+		}
 		(*all)->parse->line2[(*all)->parse->i_2++] = (*all)->parse->line1[(*all)->parse->i_1++];
 	}
 	(*all)->parse->line2[(*all)->parse->i_2] = '\'';
@@ -44,6 +49,7 @@ void	do_two_quotes(t_all **all, t_env *envi)
 	{
 		if ((*all)->parse->line1[(*all)->parse->i_1] == '\'')
 		{
+			(*all)->parse->flag2 = 1;
 			do_simple_quotes(all, envi);
 			continue ;
 		}
@@ -76,6 +82,7 @@ void	quotes(t_all *all, t_env *envi)
 	while (all->parse->split[i])
 	{
 		all->parse->flag = 0;
+		all->parse->flag2 = 0;
 		all->parse->i_1 = 0;
 		all->parse->i_2 = 0;
 		all->parse->line1 = all->parse->split[i];
@@ -94,7 +101,7 @@ void	quotes(t_all *all, t_env *envi)
 		i++;
 	}
 	all->parse->split2[i] = NULL;
-	free(all->parse->split2);
+	// free(all->parse->split2);
 }
 	// int n = 0;
 	// while (all->parse->split2[n])
