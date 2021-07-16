@@ -50,8 +50,6 @@ void	do_dollar(t_all **all, t_env *envi)
 
 	key = ft_strdup("");
 	(*all)->parse->i_1++;
-	while ((*all)->parse->line1[(*all)->parse->i_1] == '\'' || (*all)->parse->line1[(*all)->parse->i_1] == '\"')
-		(*all)->parse->i_1++;
 	get_key(all, key);
 	key_len = ft_strlen(key);
 	while (envi)
