@@ -6,7 +6,7 @@
 /*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 18:38:36 by lgarg             #+#    #+#             */
-/*   Updated: 2021/07/16 14:59:41 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/16 15:08:02 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	get_key(t_all **all, char *key)
 void	do_dollar(t_all **all, t_env *envi)
 {
 	char	*key;
-	int		key_len; 
+	int		key_len;
 
 	key = ft_strdup("");
 	(*all)->parse->i_1++;
