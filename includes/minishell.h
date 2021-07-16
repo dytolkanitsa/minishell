@@ -6,7 +6,7 @@
 /*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/26 16:54:03 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/14 13:05:06 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/16 14:19:14 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ typedef struct s_parse
 	char			*line1;
 	char			*line2;
 	char			**split2;
-	int				flag; // чтобы работало "'$USER'"
-	int				flag2; // чтобы работало '"$USER"' (работает идеально)
 
 	int				count_r;
 	int				redir1; //>
@@ -112,6 +110,7 @@ int		if_key_ok(char *str);
 int		ft_isalnum(int c);
 void	*ft_calloc(size_t number, size_t size);
 void	ft_bzero(void *s, size_t n);
+char	ft_check(char c, const char *set);
 
 //parse
 void	parse_redir_pipe(t_all *all, char *line);

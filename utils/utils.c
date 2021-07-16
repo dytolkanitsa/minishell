@@ -6,7 +6,7 @@
 /*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 18:10:06 by lgarg             #+#    #+#             */
-/*   Updated: 2021/07/13 18:10:18 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/16 14:11:48 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,18 @@ int	ft_splitlen(char **str)
 	while (str[i])
 		i++;
 	return (i);
+}
+
+char	ft_check(char c, const char *set)
+{
+	int	i;
+
+	i = 0;
+	while (set[i])
+	{
+		if (set[i] == c)
+			return (1);
+		i++;
+	}
+	return (0);
 }
