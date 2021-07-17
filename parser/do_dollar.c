@@ -6,7 +6,7 @@
 /*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 18:38:36 by lgarg             #+#    #+#             */
-/*   Updated: 2021/07/17 19:12:24 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/17 19:36:16 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	do_dollar(t_all **all, t_env *envi)
 	key = ft_strdup("");
 	(*all)->parse->i_1++;
 	if ((*all)->parse->line1[(*all)->parse->i_1] == '?' && (!(*all)->parse->line1[(*all)->parse->i_1 + 1] \
-					|| (*all)->parse->line1[(*all)->parse->i_1 + 1] == '\"'))
+					|| (*all)->parse->line1[(*all)->parse->i_1 + 1] == '\"') && (*all)->parse->flag == 1)
 	{
 		printf("%d\n", g_exit_status);
 		(*all)->parse->i_1++;
@@ -69,7 +69,7 @@ void	do_dollar(t_all **all, t_env *envi)
 			}
 			envi = envi->next;
 		}
-	free (key);
 	}
+	free (key);
 }
 

@@ -6,7 +6,7 @@
 /*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/26 16:44:47 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/17 19:02:19 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/17 19:35:32 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	main(int argc, char **argv, char **env)
 	head = all->parse;
 	signal_init();
 	init_env(&envi, env);
-	all->error = 0;
+	all->parse->flag = 0;
 	while (42)
 	{
 		all->count_fd = 0;
@@ -86,6 +86,12 @@ int	main(int argc, char **argv, char **env)
 				cmd_unset(envi, all->parse->split[1]);
 			else if (ft_strcmp(all->parse->split2[0], "exit") == 0)
 				cmd_exit(envi);
+			else if (ft_strcmp(all->parse->split[0], "$?") == 0)
+			{
+				printf("minishell> %d: command not found\n", g_exit_status);
+				all->parse->flag = 1;
+				g_exit_status = 127;
+			}
 			else if (ft_strcmp(all->parse->split2[0], "<<") == 0)
 			{
 				if (!all->parse->split[1])
@@ -105,10 +111,6 @@ int	main(int argc, char **argv, char **env)
 						break ;
 					rl_on_new_line();
 				}
-			}
-			else if (ft_strcmp(all->parse->split[0], "$?") == 0)
-			{
-				printf("minishell> %d: command not found\n", g_exit_status);
 			}
 			else
 			{

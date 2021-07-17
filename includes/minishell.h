@@ -6,7 +6,7 @@
 /*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/26 16:54:03 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/17 15:49:45 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/17 19:32:56 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ typedef struct s_parse
 	char			*line1;
 	char			*line2;
 	char			**split2;
-	int				flag; // чтобы работало "'$USER'"
-	int				flag2; // чтобы работало '"$USER"' (работает идеально)
+	int				flag;
 
 	int				count_r;
 	int				redir1; //>
