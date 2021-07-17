@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_pwd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/26 16:52:31 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/12 17:41:46 by mjammie          ###   ########.fr       */
+/*   Updated: 2021/07/17 15:53:44 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,5 @@ void	cmd_pwd(t_env *envi, t_all *all)
 	free(pwd);
 	free(buf);
 	close_fd(all);
+	g_exit_status = 0;
 }

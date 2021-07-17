@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_unset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/28 14:37:25 by mjammie           #+#    #+#             */
-/*   Updated: 2021/06/28 14:52:51 by mjammie          ###   ########.fr       */
+/*   Updated: 2021/07/17 15:53:49 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,13 @@ void	cmd_unset(t_env *envi, char *key)
 			i++;
 		if (ft_strncmp(envi->value, key, i) == 0)
 		{
-			free(envi->value);
-			envi->value = NULL;
-			temp = envi->next;
-			envi = pred;
-			envi->next = temp;
-			free(temp);
+			temp = envi;
+			envi = envi->next;
+			pred->next = envi;
+			break ;
 		}
 		pred = envi;
 		envi = envi->next;
 	}
+	g_exit_status = 0;
 }

@@ -39,7 +39,7 @@ OBJ_LIST_SIGNAL = $(LIST_SIGNAL:.c=.o)
 all : $(NAME)
 
 %.o : %.c $(HEADER)
-	gcc $(FLAGS) -I $(HEADER) -c $< -o $@
+	gcc -g $(FLAGS) -I $(HEADER) -c $< -o $@
 
 ${NAME} : $(OBJ) $(OBJ_CMD) $(OBJ_PARSER) $(OBJ_UTILS) $(OBJ_PIPE) $(OBJ_LIST_SIGNAL) $(HEADER)
 	gcc $(READLINE) $(FLAGS) $(OBJ) $(OBJ_CMD) $(OBJ_PARSER) $(OBJ_UTILS) $(OBJ_PIPE) $(OBJ_LIST_SIGNAL) -o $(NAME)

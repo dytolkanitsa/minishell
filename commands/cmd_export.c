@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_export.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/28 13:15:20 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/14 11:20:07 by mjammie          ###   ########.fr       */
+/*   Updated: 2021/07/17 15:53:41 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,4 +185,5 @@ void	cmd_export(t_env *envi, char **argv, int argc, t_all *all)
 	}
 	else if (argc == 1 || all->parse->count_r != 0)
 		sort_envi(envi, all);
+	g_exit_status = 0;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/10 12:13:52 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/16 19:05:40 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/16 19:11:35 by mjammie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,22 +91,16 @@ void	quotes(t_all *all, t_env *envi)
 			}
 			else
 			{
-				printf("minishell> %s: command not found", all->parse->line1);
+				printf("minishell> %s: not enought quotes\n", all->parse->line1);
 				break ;
 			}
 		}
 		all->parse->line2[all->parse->i_2] = '\0';
 		all->parse->split2[i] = all->parse->line2;
-		free(all->parse->line1);
+		// free(all->parse->line1);
 		i++;
 	}
 	all->parse->split2[i] = NULL;
-	int n = 0;
-	while (all->parse->split2[n])
-	{
-		printf("%s\n", all->parse->split2[n]);
-		n++;
-	}
 }
 
 void	quot(t_all *all, t_env *envi)

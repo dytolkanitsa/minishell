@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_init.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/06 20:31:36 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/12 20:42:16 by mjammie          ###   ########.fr       */
+/*   Updated: 2021/07/17 17:45:28 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	my_sigint(int val)
 void	ctrl_d_hook(void)
 {
 	ft_putstr_fd("\e[1A\e[12C" "exit\n", 1);
-	exit (1);
+	exit (0);
 }
 
 void	signal_init(void)
