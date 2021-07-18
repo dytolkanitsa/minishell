@@ -6,7 +6,7 @@
 /*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/26 16:44:47 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/18 13:48:17 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/18 14:58:36 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ int	main(int argc, char **argv, char **env)
 	par = new_node();
 	all->parse = par;
 	head = all->parse;
-	signal_init();
 	init_env(&envi, env);
 	all->parse->flag = 0;
 	while (42)
 	{
+		signal_init();
 		all->count_fd = 0;
 		all->count_pipe = 0;
 		all->fd_iter = 0;
@@ -114,10 +114,8 @@ int	main(int argc, char **argv, char **env)
 			}
 			else
 			{
-				// signal_init2();
 				other_cmd(all->parse->split, envi, all);
 			}
-		signal_init();
 		}
 		all->parse = par;
 		free(line);
