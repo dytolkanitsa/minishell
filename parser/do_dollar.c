@@ -6,7 +6,7 @@
 /*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/13 18:38:36 by lgarg             #+#    #+#             */
-/*   Updated: 2021/07/17 19:36:16 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/18 16:12:46 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,10 @@ void	do_dollar(t_all **all, t_env *envi)
 	{
 		printf("%d\n", g_exit_status);
 		(*all)->parse->i_1++;
+	}
+	else if (!(*all)->parse->line1[(*all)->parse->i_1])
+	{
+		printf("$\n");
 	}
 	else
 	{
