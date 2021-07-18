@@ -6,7 +6,7 @@
 /*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/26 16:54:03 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/17 19:32:56 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/18 14:26:18 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,7 @@ int		pipex(int count_pipes, char **split, char **env, t_all *all, t_env *envi);
 
 //signal
 void	signal_init(void);
+void	signal_init2(void);
 void	ctrl_d_hook(void);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/28 15:43:02 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/17 18:54:56 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/18 14:26:00 by lgarg            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,24 +82,19 @@ void	other_cmd(char **cmd, t_env *envi, t_all *all)
 	}
 	all->fd_iter--;
 	pid = fork();
+	signal_init2();
 	if (pid == 0)
 	{
-		signal(SIGINT, SIG_DFL);
 		dup_fd(all);
 		if (op == -1 && !all->absol)
 		{
 			g_exit_status = 127;
 			printf("minishell: %s: command not found\n", all->parse->split2[0]);
-			// strerror(127);
-			// printf("%d\n", g_exit_status);
 			exit(g_exit_status);
 		}
-			// perror("Invalid command!\n");
 		close_fd(all);
 		execve(path, tmp, NULL);
 	}
-	//wait(&pid);
-	//wait(&g_exit_status);
 	waitpid(pid, &status, WUNTRACED | WCONTINUED);
 	g_exit_status = WEXITSTATUS(status);
 }
