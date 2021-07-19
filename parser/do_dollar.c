@@ -12,37 +12,6 @@
 
 #include "../includes/minishell.h"
 
-char *ft_strcpy(char *dest, char *src)
-{
-	int i;
-
-	i = 0;
-	while (src[i] != '\0')
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
-
-int	if_key(char c)
-{
-	if (c == '_' || ft_isalnum(c))
-		return (1);
-	return (0);
-}
-
-void	get_key(t_all **all, char *key)
-{
-	int i;
-
-	i = 0;
-	while (if_key((*all)->parse->line1[(*all)->parse->i_1]))
-		key[i++] = (*all)->parse->line1[(*all)->parse->i_1++];
-	key[i] = '\0';
-}
-
 void	do_dollar(t_all **all, t_env *envi)
 {
 	char	*key;
@@ -51,7 +20,7 @@ void	do_dollar(t_all **all, t_env *envi)
 	key = ft_strdup("");
 	(*all)->parse->i_1++;
 	if ((*all)->parse->line1[(*all)->parse->i_1] == '?' && (!(*all)->parse->line1[(*all)->parse->i_1 + 1] \
-					|| (*all)->parse->line1[(*all)->parse->i_1 + 1] == '\"') && (*all)->parse->flag == 1)
+					|| (*all)->parse->line1[(*all)->parse->i_1 + 1] == '\"') && (*all)->parse->flag != 1)
 	{
 		printf("%d\n", g_exit_status);
 		(*all)->parse->i_1++;

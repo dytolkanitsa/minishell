@@ -12,19 +12,22 @@
 
 #include "../includes/minishell.h"
 
-// int	if_key_ok(char *str)
-// {
-// 	int	i;
+int	if_key(char c)
+{
+	if (c == '_' || ft_isalnum(c))
+		return (1);
+	return (0);
+}
 
-// 	i = 0;
-// 	while (str[i])
-// 	{
-// 		if (str[i] != '_' || !ft_isalnum(str[i]))
-// 			return (0);
-// 		i++;
-// 	}
-// 	return (1);
-// }
+void	get_key(t_all **all, char *key)
+{
+	int i;
+
+	i = 0;
+	while (if_key((*all)->parse->line1[(*all)->parse->i_1]))
+		key[i++] = (*all)->parse->line1[(*all)->parse->i_1++];
+	key[i] = '\0';
+}
 
 int	ft_splitlen(char **str)
 {

@@ -32,9 +32,9 @@ int	main(int argc, char **argv, char **env)
 	all->parse = par;
 	head = all->parse;
 	init_env(&envi, env);
-	all->parse->flag = 0;
 	while (42)
 	{
+		all->parse->flag = 0;
 		signal_init();
 		all->count_fd = 0;
 		all->count_pipe = 0;

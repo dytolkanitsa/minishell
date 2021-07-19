@@ -57,6 +57,34 @@ int	quotes_closed(t_all *all)
 	return (1);
 }
 
+void	for_quotes(t_all *all, t_env *envi)
+{
+	if (all->parse->line1[all->parse->i_1] == '\'' || all->parse->line1[all->parse->i_1] == '\"' \
+							|| all->parse->line1[all->parse->i_1] == '$')
+	{
+		if (all->parse->line1[all->parse->i_1] == '\'')
+			do_simple_quotes(&all, envi);
+		else if (all->parse->line1[all->parse->i_1] == '\"')
+			do_two_quotes(&all, envi);
+		else if (all->parse->line1[all->parse->i_1] == '$' && !ft_check(all->parse->line1[all->parse->i_1 + 1], "\'\""))
+			do_dollar(&all, envi);
+		else if (all->parse->line1[all->parse->i_1] == '$' && ft_check(all->parse->line1[all->parse->i_1 + 1], "\'\""))
+				all->parse->i_1++;
+	}
+	else
+	{
+		all->parse->line2[all->parse->i_2++] = all->parse->line1[all->parse->i_1++];
+	}
+}
+
+void	init_quotes(t_all *all, int *i)
+{
+	all->parse->i_1 = 0;
+	all->parse->i_2 = 0;
+	all->parse->line1 = all->parse->split[(*i)];
+	all->parse->line2 = (char *)ft_calloc(1000, sizeof(char));
+}
+
 void	quotes(t_all *all, t_env *envi)
 {
 	int	i;
@@ -64,30 +92,12 @@ void	quotes(t_all *all, t_env *envi)
 	i = 0;
 	while (all->parse->split[i])
 	{
-		all->parse->i_1 = 0;
-		all->parse->i_2 = 0;
-		all->parse->line1 = all->parse->split[i];
-		all->parse->line2 = (char *)ft_calloc(1000, sizeof(char));
+		init_quotes(all, &i);
 		while (all->parse->line1[all->parse->i_1])
 		{
 			if (quotes_closed(all))
 			{
-				if (all->parse->line1[all->parse->i_1] == '\'' || all->parse->line1[all->parse->i_1] == '\"' \
-										|| all->parse->line1[all->parse->i_1] == '$')
-				{
-					if (all->parse->line1[all->parse->i_1] == '\'')
-						do_simple_quotes(&all, envi);
-					else if (all->parse->line1[all->parse->i_1] == '\"')
-						do_two_quotes(&all, envi);
-					else if (all->parse->line1[all->parse->i_1] == '$' && !ft_check(all->parse->line1[all->parse->i_1 + 1], "\'\""))
-						do_dollar(&all, envi);
-					else if (all->parse->line1[all->parse->i_1] == '$' && ft_check(all->parse->line1[all->parse->i_1 + 1], "\'\""))
-						 all->parse->i_1++;
-				}
-				else
-				{
-					all->parse->line2[all->parse->i_2++] = all->parse->line1[all->parse->i_1++];
-				}
+				for_quotes(all, envi);
 			}
 			else
 			{

@@ -117,6 +117,9 @@ char	ft_check(char c, const char *set);
 int		ft_isalnum(int c);
 void	*ft_calloc(size_t number, size_t size);
 void	ft_bzero(void *s, size_t n);
+void	get_key(t_all **all, char *key);
+int		if_key(char c);
+char	*ft_strcpy(char *dest, char *src);
 
 //parse
 void	parse_redir_pipe(t_all *all, char *line);
