@@ -1,27 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   work_with_signal.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/13 18:07:23 by lgarg             #+#    #+#             */
-/*   Updated: 2021/07/25 18:03:50 by mjammie          ###   ########.fr       */
+/*   Created: 2021/07/22 19:29:19 by mjammie           #+#    #+#             */
+/*   Updated: 2021/07/23 20:08:37 by mjammie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	ft_bzero(void *s, size_t n)
+void	my_sigint(int val)
 {
-	size_t			i;
-	unsigned char	*str;
+	(void)val;
+	rl_on_new_line();
+	rl_redisplay();
+	ft_putstr_fd("  \n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
 
-	i = 0;
-	str = (unsigned char *)s;
-	while (i < n)
-	{
-		str[i] = '\0';
-		i++;
-	}
+void	ctrl_d_hook(void)
+{
+	ft_putstr_fd("\e[1A\e[12C" "exit\n", 1);
+	exit (g_exit_status);
+}
+
+void	ctrlc_in_other(int val)
+{
+	(void)val;
+	g_exit_status = 130;
+	printf("\n");
+}
+
+void	ctrlsl_in_other(int val)
+{
+	(void)val;
+	g_exit_status = 131;
+	printf("Quit: 3\n");
 }

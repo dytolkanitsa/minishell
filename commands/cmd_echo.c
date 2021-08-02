@@ -3,67 +3,53 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_echo.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/26 17:11:23 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/17 15:52:29 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/23 20:06:44 by mjammie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// int	check_redir(char *str)
-// {
-// 	if (ft_strch)
-// }
-
-char	*cmd_echo(int argc, char **argv, t_env *envi, t_all *all)
+void	without_n(char **argv)
 {
-	t_env	*head;
 	int		i;
-	int		n;
-	int		key_len;
-	int		cmd_not_found;
-	int		z;
 
 	i = 0;
-	head = envi;
-	key_len = 0;
-	z = 0;
-	while (z < all->parse->count_r)
+	i = 2;
+	while (argv[i] && !ft_strchr("<>", argv[i][0]))
 	{
-		all->fd_iter++;
-		z++;
+		if (ft_strcmp(argv[i], "-n") != 0)
+			printf("%s", argv[i]);
+		if (argv[i + 1] != 0 && !ft_strchr("<>", argv[i + 1][0]) \
+			&& ft_strcmp(argv[i], "-n") != 0)
+			printf(" ");
+		i++;
 	}
-	dup_fd(all);
+}
+
+void	cmd_echo(int argc, char **argv)
+{
+	int		i;
+
+	i = 0;
 	if (argc == 1)
 		printf("\n");
 	else
 	{
 		if (ft_strcmp(argv[1], "-n") == 0)
-		{
-			i = 2;
-			while (argv[i] && !ft_strchr("<>", argv[i][0]))
-			{
-				envi = head;
-					printf("%s", argv[i]);
-					if (argv[i + 1] != 0)
-						printf(" ");
-				i++;
-			}
-		}
+			without_n(argv);
 		else
 		{
 			i = 1;
 			while (argv[i] && !ft_strchr("<>", argv[i][0]))
 			{
-				envi = head;
-					printf("%s\n", argv[i]);
+				printf("%s ", argv[i]);
 				i++;
 			}
+			printf("\n");
 		}
 	}
-	close_fd(all);
 	g_exit_status = 0;
-	return (0);
 }

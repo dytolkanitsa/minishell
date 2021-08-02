@@ -3,26 +3,101 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/26 16:44:47 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/18 14:58:36 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/26 16:44:41 by mjammie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
+void	without_pipes(char *line, t_all *all, t_env *envi)
+{
+	int	x;
+
+	x = 1;
+	while (x < all->parse->count_r)
+	{
+		all->fd_iter_redir++;
+		x++;
+	}
+	if (all->parse->count_r > 0)
+		dup_fd2(all);
+	if (!check_cmd(all, envi))
+	{
+		if (ft_strcmp(all->parse->split2[0], "<<") == 0)
+			double_reverse_redir(line, all);
+		else if (ft_strcmp(all->parse->split[0], "$?") == 0)
+		{
+			printf("mminishell: %d: command not found\n", g_exit_status);
+			all->parse->flag = 1;
+			g_exit_status = 127;
+		}
+		else
+			other_cmd(all->parse->split2, envi, all);
+	}
+	if (all->parse->count_r > 0)
+		close_fd2(all);
+}
+
+int	check_error(char *line)
+{
+	if (line == NULL)
+		ctrl_d_hook();
+	if (main_preparser(line))
+	{
+		add_history(line);
+		free(line);
+		return (1);
+	}
+	if ((line && line[0] == '\0') || ft_strcmp(line, "	") == 0 \
+		|| check_space(line))
+	{
+		free(line);
+		return (1);
+	}
+	return (0);
+}
+
+void	if_have_pipes(t_all *all, t_env *envi)
+{
+	int		fd_copy[2];
+
+	fd_copy[0] = dup(0);
+	fd_copy[1] = dup(1);
+	pipex(all, envi);
+	dup2(fd_copy[0], 0);
+	dup2(fd_copy[1], 1);
+}
+
+static void	main_parse(t_all *all, t_env *envi)
+{
+	t_all	*ha;
+	t_parse	*head;
+
+	ha = all;
+	head = all->parse;
+	add_history(all->readline);
+	rl_redisplay();
+	parse_redir_pipe(all, all->readline);
+	all->parse = head;
+	quot(all, envi);
+	all->parse = head;
+	parse_fd(all->readline, all);
+	all = ha;
+	all->pid = malloc(sizeof(pid_t) * (all->count_pipe + 1));
+	if (all->count_pipe != 0)
+		if_have_pipes(all, envi);
+	else
+		without_pipes(all->readline, all, envi);
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_all	*all;
-	pid_t	pid;
 	t_parse	*par;
-	char	*line;
-	char	**split;
 	t_env	*envi;
-	int		len_split;
-	t_parse *head;
-	int fd_copy[2];
 
 	(void)argc;
 	(void)argv;
@@ -30,97 +105,17 @@ int	main(int argc, char **argv, char **env)
 	all = malloc(sizeof(t_all));
 	par = new_node();
 	all->parse = par;
-	head = all->parse;
 	init_env(&envi, env);
 	while (42)
 	{
-		all->parse->flag = 0;
 		signal_init();
-		all->count_fd = 0;
-		all->count_pipe = 0;
-		all->fd_iter = 0;
-		all->tm_fd0 = 0;
-		all->tm_fd1 = 1;
-		all->parse->count_r = 0;
-		all->absol = 0;
-		
-		line = readline("minishell> ");
-		if (line == NULL)
-			ctrl_d_hook();
-		if (line && line[0] == '\0')
-		{
-			free(line);
+		init_all(all);
+		all->readline = readline("\e[38;5;202mminishell🦊 \033[0m");
+		if (check_error(all->readline))
 			continue ;
-		}
-		split = NULL;
-		add_history(line);
-		rl_redisplay();
-		parse_redir_pipe(all, line);
-		quot(all, envi);
-		all->parse = head;
-		work_with_fd(line, all);
-		all->pid = malloc(sizeof(pid_t) * (all->count_pipe + 1));
-		// print_struct(all);
-		if (all->count_pipe != 0)
-		{
-			len_split = ft_splitlen(all->parse->split);
-			fd_copy[0] = dup(0);
-			fd_copy[1] = dup(1);
-			pipex(len_split, all->parse->split, env, all, envi);
-			dup2(fd_copy[0], 0);
-			dup2(fd_copy[1], 1);
-		}
-		else
-		{
-			if (ft_strcmp(all->parse->split2[0], "pwd") == 0)
-				cmd_pwd(envi, all);
-			else if (ft_strcmp(all->parse->split2[0], "echo") == 0)
-				cmd_echo(ft_splitlen(all->parse->split2), all->parse->split2, envi, all);
-			else if (ft_strcmp(all->parse->split2[0], "cd") == 0)
-				cmd_cd(envi, all->parse->split[1]);
-			else if (ft_strcmp(all->parse->split2[0], "env") == 0)
-				cmd_env(envi, all);
-			else if (ft_strcmp(all->parse->split2[0], "export") == 0)
-				cmd_export(envi, all->parse->split2, ft_splitlen(all->parse->split), all);
-			else if (ft_strcmp(all->parse->split2[0], "unset") == 0)
-				cmd_unset(envi, all->parse->split[1]);
-			else if (ft_strcmp(all->parse->split2[0], "exit") == 0)
-				cmd_exit(envi);
-			else if (ft_strcmp(all->parse->split[0], "$?") == 0)
-			{
-				printf("minishell> %d: command not found\n", g_exit_status);
-				all->parse->flag = 1;
-				g_exit_status = 127;
-			}
-			else if (ft_strcmp(all->parse->split2[0], "<<") == 0)
-			{
-				if (!all->parse->split[1])
-				{
-					printf("minishell> syntax error near unexpected token `newline'\n");
-					all->parse = par;
-					free(line);
-					line = NULL;
-					continue ;
-				}
-				while (42)
-				{
-					line = readline("> ");
-					if (line == NULL)
-						break ;
-					if (ft_strcmp(line, all->parse->split[1]) == 0)
-						break ;
-					rl_on_new_line();
-				}
-			}
-			else
-			{
-				other_cmd(all->parse->split, envi, all);
-			}
-		}
+		main_parse(all, envi);
 		all->parse = par;
-		free(line);
-		line = NULL;
+		free(all->readline);
 	}
 	return (g_exit_status);
 }
-	

@@ -1,27 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/13 18:07:23 by lgarg             #+#    #+#             */
-/*   Updated: 2021/07/25 18:03:50 by mjammie          ###   ########.fr       */
+/*   Created: 2021/04/16 14:19:49 by mjammie           #+#    #+#             */
+/*   Updated: 2021/07/22 15:50:58 by mjammie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	ft_bzero(void *s, size_t n)
+int	ft_isdigit(int c)
 {
-	size_t			i;
-	unsigned char	*str;
-
-	i = 0;
-	str = (unsigned char *)s;
-	while (i < n)
-	{
-		str[i] = '\0';
-		i++;
-	}
+	if (c >= 48 && c <= 57)
+		return (c);
+	return (0);
 }

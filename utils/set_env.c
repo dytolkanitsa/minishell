@@ -1,27 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   set_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/13 18:07:23 by lgarg             #+#    #+#             */
-/*   Updated: 2021/07/25 18:03:50 by mjammie          ###   ########.fr       */
+/*   Created: 2021/07/23 16:35:32 by mjammie           #+#    #+#             */
+/*   Updated: 2021/07/25 18:05:21 by mjammie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	ft_bzero(void *s, size_t n)
+char	**set_env(t_env *envi)
 {
-	size_t			i;
-	unsigned char	*str;
+	char	**res;
+	int		i;
 
 	i = 0;
-	str = (unsigned char *)s;
-	while (i < n)
+	res = malloc(sizeof(char *) * (list_len(envi) + 1));
+	res[list_len(envi)] = NULL;
+	i = 0;
+	while (envi)
 	{
-		str[i] = '\0';
+		res[i] = ft_strdup(envi->value);
 		i++;
+		envi = envi->next;
 	}
+	return (res);
 }

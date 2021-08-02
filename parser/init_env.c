@@ -1,64 +1,51 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   init_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/13 18:10:06 by lgarg             #+#    #+#             */
-/*   Updated: 2021/07/23 20:08:43 by mjammie          ###   ########.fr       */
+/*   Created: 2021/06/28 11:28:13 by mjammie           #+#    #+#             */
+/*   Updated: 2021/07/24 11:45:51 by mjammie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	ft_splitlen(char **str)
+int	env_size(char **env)
 {
 	int	i;
 
 	i = 0;
-	while (str[i])
+	while (env[i])
 		i++;
 	return (i);
 }
 
-char	ft_check(char c, const char *set)
+void	init_env(t_env	**envi, char **env)
 {
-	int	i;
+	int		size_env;
+	int		i;
+	t_env	*head;
 
 	i = 0;
-	while (set[i])
+	size_env = env_size(env);
+	(*envi) = malloc(sizeof(t_env));
+	head = (*envi);
+	while (env[i])
 	{
-		if (set[i] == c)
-			return (1);
+		(*envi)->value = ft_strdup(env[i]);
+		if (ft_strncmp(env[i], "SHLVL=", 6) == 0)
+		{
+			(*envi)->value[6] = (*envi)->value[6] + 1;
+		}
+		(*envi)->next = NULL;
 		i++;
+		if (env[i])
+		{
+			(*envi)->next = malloc(sizeof(t_env));
+			(*envi) = (*envi)->next;
+		}
 	}
-	return (0);
-}
-
-int	check_space(char *line)
-{
-	int	i;
-
-	i = 0;
-	while (line[i])
-	{
-		if (line[i] != ' ')
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-int	list_len(t_env *envi)
-{
-	int	len_envi;
-
-	len_envi = 0;
-	while (envi)
-	{
-		len_envi++;
-		envi = envi->next;
-	}
-	return (len_envi);
+	(*envi) = head;
 }

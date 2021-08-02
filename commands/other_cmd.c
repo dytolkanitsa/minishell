@@ -3,98 +3,65 @@
 /*                                                        :::      ::::::::   */
 /*   other_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/28 15:43:02 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/18 14:26:00 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/26 16:38:54 by mjammie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+static int	check(t_all *all, char **tmp)
+{
+	if (all->paths == NULL)
+	{
+		printf("\e[38;5;202mminishell: " "\033[0m%s: \
+No such file or directory\n", all->parse->split2[0]);
+		g_exit_status = 127;
+		free_array(tmp);
+		return (1);
+	}
+	if (all->parse->fd_for_open == -1)
+	{
+		g_exit_status = 127;
+		printf("\e[38;5;202mminishell: " "\033[0m%s: \
+command not found\n", all->parse->split2[0]);
+		free_array(tmp);
+		return (1);
+	}
+	return (0);
+}
+
+static void	child(t_all *all, char **tmp, t_env *envi)
+{
+	if (check(all, tmp))
+		exit(g_exit_status);
+	execve(all->parse->pt_cmd, tmp, set_env(envi));
+}
+
 void	other_cmd(char **cmd, t_env *envi, t_all *all)
 {
-	char	**paths;
-	char	*path;
-	int		i;
-	int		op;
+	int		status;
 	pid_t	pid;
-	int		z;
 	char	**tmp;
-	int		n;
-	int		len;
-	int		len_new_absolut;
-	int status;
 
-	i = 0;
-	n = 0;
-	len = 0;
-	len_new_absolut = 0;
-	tmp = malloc(ft_splitlen(cmd) * sizeof(char *) + 1);
+	status = 0;
+	tmp = malloc((ft_splitlen(cmd) + 1) * sizeof(char *));
 	tmp[ft_splitlen(cmd)] = NULL;
-	while (cmd[i])
-	{
-		if (!ft_strchr("<>", cmd[i][0]))
-		{
-			if (ft_strchr(cmd[i], '/'))
-			{
-				len = ft_strlen(cmd[i]);
-				while (cmd[i][len] != '/')
-				{
-					len_new_absolut++;
-					len--;
-				}
-				len = ft_strlen(cmd[i]);
-				tmp[n] = malloc(len_new_absolut + 1);
-				tmp[n][len_new_absolut] = 0;
-				while (len_new_absolut)
-				{
-					tmp[n][len_new_absolut - 1] = cmd[i][len];
-					len--;
-					len_new_absolut--;
-				}
-			}
-			else
-			{
-				tmp[n] = cmd[i];
-			}
-			n++;
-		}
-		i++;
-	}
-	tmp[n] = NULL;
-	i = 0;
-	paths = get_path(envi);
-	while (paths[i])
-	{
-		path = join_path_to_file(paths[i], cmd[0], all);
-		op = open(path, O_RDONLY);
-		if (op != -1)
-			break ;
-		i++;
-		close(op);
-	}
-	z = 0;
-	while (z < all->parse->count_r)
-	{
-		all->fd_iter++;
-		z++;
-	}
-	all->fd_iter--;
+	all->paths = NULL;
+	get_path(envi, all);
+	cut_array(cmd, all, tmp);
+	if (check(all, tmp))
+		return ;
+	search_path(all, cmd[0]);
+	signal_init_for_child();
+	if (check(all, tmp))
+		return ;
 	pid = fork();
-	signal_init2();
 	if (pid == 0)
-	{
-		dup_fd(all);
-		if (op == -1 && !all->absol)
-		{
-			g_exit_status = 127;
-			printf("minishell: %s: command not found\n", all->parse->split2[0]);
-			exit(g_exit_status);
-		}
-		close_fd(all);
-		execve(path, tmp, NULL);
-	}
+		child(all, tmp, envi);
+	free_array(tmp);
 	waitpid(pid, &status, WUNTRACED | WCONTINUED);
 	g_exit_status = WEXITSTATUS(status);
 }

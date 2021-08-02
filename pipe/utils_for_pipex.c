@@ -1,27 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   utils_for_pipex.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/13 18:07:23 by lgarg             #+#    #+#             */
-/*   Updated: 2021/07/25 18:03:50 by mjammie          ###   ########.fr       */
+/*   Created: 2021/07/23 20:02:55 by mjammie           #+#    #+#             */
+/*   Updated: 2021/07/25 13:34:42 by mjammie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	ft_bzero(void *s, size_t n)
+void	dup_for_redir(t_all *all)
 {
-	size_t			i;
-	unsigned char	*str;
+	int	m;
+
+	m = 1;
+	while (m < all->parse->count_r)
+	{
+		all->fd_iter_redir++;
+		m++;
+	}
+	if (all->parse->count_r > 0)
+		dup_fd2(all);
+}
+
+void	wait_and_close(t_all *all)
+{
+	int	i;
 
 	i = 0;
-	str = (unsigned char *)s;
-	while (i < n)
+	while (i < all->count_pipe + 1)
 	{
-		str[i] = '\0';
+		waitpid(all->pid[i], NULL, 0);
 		i++;
 	}
+	close(all->pfd[0][0]);
+	close(all->pfd[0][1]);
+	close(all->pfd[1][0]);
+	close(all->pfd[1][1]);
 }

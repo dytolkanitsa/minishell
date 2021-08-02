@@ -3,30 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   signal_init.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgarg <lgarg@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mjammie <mjammie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/06 20:31:36 by mjammie           #+#    #+#             */
-/*   Updated: 2021/07/18 14:26:36 by lgarg            ###   ########.fr       */
+/*   Updated: 2021/07/24 14:36:47 by mjammie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-static void	my_sigint(int val)
-{
-	rl_on_new_line();
-	rl_redisplay();
-	ft_putstr_fd("  \n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
-
-void	ctrl_d_hook(void)
-{
-	ft_putstr_fd("\e[1A\e[12C" "exit\n", 1);
-	exit (0);
-}
 
 void	signal_init(void)
 {
@@ -35,14 +19,9 @@ void	signal_init(void)
 	signal(SIGTSTP, SIG_IGN);
 }
 
-static void	my_new(int val)
+void	signal_init_for_child(void)
 {
-	printf("\n");
-}
-
-void	signal_init2(void)
-{
-	signal(SIGINT, my_new);
-	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, ctrlc_in_other);
+	signal(SIGQUIT, ctrlsl_in_other);
 	signal(SIGTSTP, SIG_IGN);
 }
